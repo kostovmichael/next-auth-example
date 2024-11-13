@@ -5,12 +5,21 @@ import Layout from "../components/layout"
 import type { GetServerSidePropsContext } from "next"
 import type { Session } from "next-auth"
 
-export default function ServerSidePage({ session }: { session: Session }) {
+export default function ServerSidePage({ session, settings }: { session: Session, settings: any }) {
   // As this page uses Server Side Rendering, the `session` will be already
   // populated on render without needing to go through a loading stage.
   return (
     <Layout>
       <h1>Server Side Rendering</h1>
+      <p>
+        settings.clientId: {settings.clientId}
+      </p>
+      <p>
+        settings.clientSecret: {settings.clientSecret}
+      </p>
+      <p>
+        ssettings.issuer: {settings.issuer}
+      </p>
       <p>
         This page uses the <strong>getServerSession()</strong> method in{" "}
         <strong>getServerSideProps()</strong>.
@@ -38,6 +47,11 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {
     props: {
       session: await getServerSession(context.req, context.res, authOptions),
+      settings: {
+        clientId: process.env.AUTH0_ID,
+        clientSecret: process.env.AUTH0_SECRET,
+        issuer: process.env.AUTH0_ISSUER,
+      }
     },
   }
 }
